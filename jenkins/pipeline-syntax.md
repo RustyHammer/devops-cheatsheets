@@ -1,13 +1,13 @@
-# Jenkins - Pipeline et CI/CD
+# Jenkins - Pipeline and CI/CD
 
-## Pipeline declarative (structure de base)
+## Declarative Pipeline (basic structure)
 
 ```groovy
 pipeline {
     agent any
 
     tools {
-        maven 'Maven'    // Configure dans Jenkins > Global Tool Configuration
+        maven 'Maven'    // Configured in Jenkins > Global Tool Configuration
     }
 
     environment {
@@ -33,8 +33,8 @@ pipeline {
     }
 
     post {
-        success { echo 'Build reussi!' }
-        failure { echo 'Build echoue!' }
+        success { echo 'Build succeeded!' }
+        failure { echo 'Build failed!' }
     }
 }
 ```
@@ -42,7 +42,7 @@ pipeline {
 ## Credentials
 
 ```groovy
-// Utiliser des credentials stockes dans Jenkins (jamais en dur)
+// Use credentials stored in Jenkins (never hardcoded)
 withCredentials([usernamePassword(
     credentialsId: 'docker-hub-repo',
     passwordVariable: 'PASS',
@@ -60,45 +60,45 @@ sshagent(['ec2-server-key']) {
 
 ## Shared Library
 
-Structure d'une shared library :
+Structure of a shared library:
 ```
 jenkins-shared-library/
-├── vars/              # Fonctions appelables depuis le Jenkinsfile
+├── vars/              # Functions callable from the Jenkinsfile
 │   ├── buildJar.groovy
 │   └── buildImage.groovy
-└── src/com/example/   # Classes Groovy reutilisables
+└── src/com/example/   # Reusable Groovy classes
     └── Docker.groovy
 ```
 
-Utilisation dans le Jenkinsfile :
+Usage in the Jenkinsfile:
 ```groovy
-// Charger la library
+// Load the library
 library identifier: 'jenkins-shared-library@master', retriever: modernSCM(
     [$class: 'GitSCMSource', remote: 'https://github.com/user/shared-lib.git']
 )
 
-// Appeler les fonctions
+// Call the functions
 buildJar()
 buildImage('my-app:1.0')
 ```
 
-## Versioning automatique avec Maven
+## Automatic Versioning with Maven
 
 ```groovy
-// Incrementer la version patch (ex: 1.0.2 -> 1.0.3)
+// Increment the patch version (e.g., 1.0.2 -> 1.0.3)
 sh 'mvn build-helper:parse-version versions:set \
     -DnewVersion=\\\${parsedVersion.majorVersion}.\\\${parsedVersion.minorVersion}.\\\${parsedVersion.nextIncrementalVersion} \
     versions:commit'
 
-// Lire la nouvelle version
+// Read the new version
 def matcher = readFile('pom.xml') =~ '<version>(.+)</version>'
 def version = matcher[0][1]
 ```
 
-## Configuration Jenkins (checklist)
+## Jenkins Configuration (checklist)
 
-1. **Installer les plugins** : Pipeline, Git, Docker Pipeline, SSH Agent, Credentials
-2. **Configurer les tools** : Maven, Java (dans Global Tool Configuration)
-3. **Ajouter les credentials** : Docker Hub, Git, SSH keys (dans Credentials)
-4. **Creer un Pipeline job** : pointer vers le repo Git contenant le Jenkinsfile
-5. **Configurer le webhook** : GitHub/GitLab webhook pour trigger le build au push
+1. **Install plugins**: Pipeline, Git, Docker Pipeline, SSH Agent, Credentials
+2. **Configure tools**: Maven, Java (in Global Tool Configuration)
+3. **Add credentials**: Docker Hub, Git, SSH keys (in Credentials)
+4. **Create a Pipeline job**: point to the Git repo containing the Jenkinsfile
+5. **Configure the webhook**: GitHub/GitLab webhook to trigger the build on push

@@ -1,67 +1,67 @@
-# Git - Workflow et commandes
+# Git - Workflow and Commands
 
-## Workflow de base
+## Basic Workflow
 
 ```bash
-git status                  # Voir les modifications
-git add .                   # Stager tous les fichiers
-git commit -m "message"     # Commiter
-git push origin main        # Pousser vers le remote
-git pull origin main        # Recuperer les changements
+git status                  # View changes
+git add .                   # Stage all files
+git commit -m "message"     # Commit
+git push origin main        # Push to remote
+git pull origin main        # Fetch changes
 ```
 
 ## Branches
 
 ```bash
-git branch                      # Lister les branches locales
-git branch -a                   # Lister toutes les branches (local + remote)
-git checkout -b feature/name    # Creer et basculer sur une branche
-git checkout main               # Retourner sur main
-git merge feature/name          # Merger une branche dans la courante
-git branch -d feature/name      # Supprimer une branche mergee
+git branch                      # List local branches
+git branch -a                   # List all branches (local + remote)
+git checkout -b feature/name    # Create and switch to a branch
+git checkout main               # Switch back to main
+git merge feature/name          # Merge a branch into the current one
+git branch -d feature/name      # Delete a merged branch
 ```
 
-## Resolution de conflits
+## Conflict Resolution
 
 ```bash
-# 1. Puller ou merger -> conflit detecte
+# 1. Pull or merge -> conflict detected
 git merge feature/name
 
-# 2. Ouvrir les fichiers en conflit et resoudre manuellement
+# 2. Open conflicted files and resolve manually
 #    <<<<<<< HEAD
-#    votre code
+#    your code
 #    =======
-#    leur code
+#    their code
 #    >>>>>>> feature/name
 
-# 3. Marquer comme resolu et commiter
+# 3. Mark as resolved and commit
 git add .
 git commit -m "fix: resolve merge conflict"
 ```
 
-## Historique
+## History
 
 ```bash
-git log --oneline           # Historique compact
-git log --graph --oneline   # Avec visualisation des branches
-git diff                    # Changements non stages
-git diff --staged           # Changements stages
-git blame file.txt          # Qui a modifie chaque ligne
+git log --oneline           # Compact history
+git log --graph --oneline   # With branch visualization
+git diff                    # Unstaged changes
+git diff --staged           # Staged changes
+git blame file.txt          # Who modified each line
 ```
 
-## Annuler des changements
+## Undoing Changes
 
 ```bash
-git checkout -- file.txt    # Annuler les modifs d'un fichier (non stage)
-git reset HEAD file.txt     # Destagner un fichier
-git revert <commit>         # Creer un commit qui annule un autre
-git stash                   # Mettre de cote les modifs en cours
-git stash pop               # Recuperer les modifs mises de cote
+git checkout -- file.txt    # Discard changes to a file (unstaged)
+git reset HEAD file.txt     # Unstage a file
+git revert <commit>         # Create a commit that undoes another
+git stash                   # Set aside current changes
+git stash pop               # Retrieve stashed changes
 ```
 
-## Bonnes pratiques de commit
+## Commit Best Practices
 
-- Commencer par un verbe : `add`, `fix`, `update`, `remove`, `refactor`
-- Message court (< 50 caracteres) pour le titre
-- Utiliser des prefixes : `feat:`, `fix:`, `docs:`, `ci:`, `refactor:`
-- Un commit = un changement logique
+- Start with a verb: `add`, `fix`, `update`, `remove`, `refactor`
+- Short message (< 50 characters) for the title
+- Use prefixes: `feat:`, `fix:`, `docs:`, `ci:`, `refactor:`
+- One commit = one logical change

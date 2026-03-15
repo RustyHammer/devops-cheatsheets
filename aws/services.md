@@ -1,12 +1,12 @@
-# AWS - Services essentiels
+# AWS - Essential Services
 
 ## EC2 (Elastic Compute Cloud)
 
 ```bash
-# Connexion SSH
+# SSH connection
 ssh -i my-key.pem ec2-user@<PUBLIC_IP>
 
-# AWS CLI - Lancer une instance
+# AWS CLI - Launch an instance
 aws ec2 run-instances \
     --image-id ami-0abcdef1234567890 \
     --instance-type t2.micro \
@@ -15,48 +15,48 @@ aws ec2 run-instances \
     --count 1
 ```
 
-### Types d'instances courants
+### Common Instance Types
 
 | Type | vCPU | RAM | Usage |
 |------|------|-----|-------|
-| t2.micro | 1 | 1 Go | Free tier, tests |
-| t2.small | 1 | 2 Go | Petites apps |
-| t3.medium | 2 | 4 Go | Apps de production |
+| t2.micro | 1 | 1 GB | Free tier, testing |
+| t2.small | 1 | 2 GB | Small apps |
+| t3.medium | 2 | 4 GB | Production apps |
 
 ## ECR (Elastic Container Registry)
 
 ```bash
-# Login au registry ECR
+# Login to ECR registry
 aws ecr get-login-password --region eu-central-1 | \
     docker login --username AWS --password-stdin <ACCOUNT_ID>.dkr.ecr.eu-central-1.amazonaws.com
 
-# Tagger et pousser une image
+# Tag and push an image
 docker tag my-app:1.0 <ACCOUNT_ID>.dkr.ecr.eu-central-1.amazonaws.com/my-app:1.0
 docker push <ACCOUNT_ID>.dkr.ecr.eu-central-1.amazonaws.com/my-app:1.0
 ```
 
 ## VPC (Virtual Private Cloud)
 
-Analogie : Un VPC c'est comme un reseau local d'entreprise dans le cloud. Les subnets sont les etages du batiment, le Security Group est le vigile, et l'Internet Gateway est la porte d'entree.
+Analogy: A VPC is like a corporate local network in the cloud. Subnets are the floors of the building, the Security Group is the security guard, and the Internet Gateway is the front door.
 
-| Composant | Role |
+| Component | Role |
 |-----------|------|
-| VPC | Reseau isole dans AWS |
-| Subnet | Sous-reseau (public ou prive) |
-| Internet Gateway | Connexion VPC <-> Internet |
-| NAT Gateway | Permet aux instances privees d'acceder a Internet |
-| Route Table | Regles de routage du trafic |
+| VPC | Isolated network in AWS |
+| Subnet | Sub-network (public or private) |
+| Internet Gateway | VPC <-> Internet connection |
+| NAT Gateway | Allows private instances to access the Internet |
+| Route Table | Traffic routing rules |
 
 ## Security Groups
 
 ```bash
-# Creer un security group
+# Create a security group
 aws ec2 create-security-group \
     --group-name my-sg \
-    --description "Mon security group" \
+    --description "My security group" \
     --vpc-id vpc-12345
 
-# Ajouter une regle inbound
+# Add an inbound rule
 aws ec2 authorize-security-group-ingress \
     --group-id sg-12345 \
     --protocol tcp \
@@ -64,15 +64,15 @@ aws ec2 authorize-security-group-ingress \
     --cidr 0.0.0.0/0
 ```
 
-Principe : **tout est bloque par defaut**. On ouvre uniquement les ports necessaires.
+Principle: **everything is blocked by default**. Only open the necessary ports.
 
 ## IAM (Identity and Access Management)
 
 | Concept | Description |
 |---------|-------------|
-| User | Personne ou service qui interagit avec AWS |
-| Group | Collection d'users avec les memes permissions |
-| Role | Permissions temporaires assignables a un service |
-| Policy | Document JSON definissant les permissions |
+| User | Person or service that interacts with AWS |
+| Group | Collection of users with the same permissions |
+| Role | Temporary permissions assignable to a service |
+| Policy | JSON document defining permissions |
 
-**Bonne pratique** : Utiliser des Roles (pas des Users) pour les services AWS. Par exemple, une instance EC2 qui doit acceder a ECR utilise un Role IAM, pas des access keys.
+**Best practice**: Use Roles (not Users) for AWS services. For example, an EC2 instance that needs to access ECR uses an IAM Role, not access keys.

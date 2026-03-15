@@ -1,42 +1,42 @@
 # Nexus Repository Manager
 
-## Qu'est-ce que Nexus ?
+## What is Nexus?
 
-Un serveur de stockage d'artefacts (JARs, WARs, images Docker, packages npm). Comme un "Docker Hub prive" mais pour tous les types de packages.
+An artifact storage server (JARs, WARs, Docker images, npm packages). Like a "private Docker Hub" but for all types of packages.
 
-## Types de repositories
+## Repository Types
 
-| Type | Role | Exemple |
+| Type | Role | Example |
 |------|------|---------|
-| **hosted** | Stocker VOS artefacts | `maven-snapshots`, `maven-releases` |
-| **proxy** | Cache pour les repos externes | Proxy vers Maven Central, npm registry |
-| **group** | Agregateur de plusieurs repos en un seul URL | Combine hosted + proxy |
+| **hosted** | Store YOUR artifacts | `maven-snapshots`, `maven-releases` |
+| **proxy** | Cache for external repos | Proxy to Maven Central, npm registry |
+| **group** | Aggregator of multiple repos under a single URL | Combines hosted + proxy |
 
-Analogie : Le **proxy** c'est comme un CDN - il telecharge une fois depuis Internet et cache localement. Le **group** c'est une facade unique qui cherche dans tous les repos.
+Analogy: The **proxy** is like a CDN - it downloads once from the Internet and caches locally. The **group** is a single facade that searches across all repos.
 
-## Installation rapide
+## Quick Installation
 
 ```bash
-# Sur un serveur Linux avec Docker
+# On a Linux server with Docker
 docker run -d -p 8081:8081 --name nexus \
     -v nexus-data:/nexus-data \
     sonatype/nexus3
 ```
 
-Mot de passe admin initial :
+Initial admin password:
 ```bash
 docker exec nexus cat /nexus-data/admin.password
 ```
 
-## Configuration Maven
+## Maven Configuration
 
-Voir le projet [nexus-artifact-management](https://github.com/RustyHammer/nexus-artifact-management) pour les exemples complets `pom.xml` et `settings.xml`.
+See the [nexus-artifact-management](https://github.com/RustyHammer/nexus-artifact-management) project for complete `pom.xml` and `settings.xml` examples.
 
-## Configuration Gradle
+## Gradle Configuration
 
-Voir le projet [nexus-artifact-management](https://github.com/RustyHammer/nexus-artifact-management) pour les exemples complets `build.gradle` et `gradle.properties`.
+See the [nexus-artifact-management](https://github.com/RustyHammer/nexus-artifact-management) project for complete `build.gradle` and `gradle.properties` examples.
 
-## Commandes de publication
+## Publishing Commands
 
 ```bash
 # Maven
@@ -46,9 +46,9 @@ mvn deploy
 gradle publish
 ```
 
-## Bonnes pratiques
+## Best Practices
 
-- **Sauvegardes** : Sauvegarder `/nexus-data` regulierement
-- **Cleanup policies** : Configurer la suppression automatique des vieux snapshots
-- **HTTPS** : Mettre un reverse proxy (Nginx) avec un certificat SSL devant Nexus
-- **Roles** : Creer des roles specifiques pour les users CI/CD (principe du moindre privilege)
+- **Backups**: Back up `/nexus-data` regularly
+- **Cleanup policies**: Configure automatic deletion of old snapshots
+- **HTTPS**: Put a reverse proxy (Nginx) with an SSL certificate in front of Nexus
+- **Roles**: Create specific roles for CI/CD users (principle of least privilege)
